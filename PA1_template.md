@@ -213,7 +213,7 @@ After filling the missing values, the new median is greater than the old median.
 
 ### Are there differences in activity patterns between weekdays and weekends?
 
-1. Create a new factor variable in the dataset with two levels ??? ???weekday??? and ???weekend??? indicating whether a given date is a weekday or weekend day.
+1. Create a new factor variable in the dataset with two levels ??? ???weekday??? and ???weekend??? indicating whether a given date is a weekday or weekend day:
 
 
 ```r
@@ -239,3 +239,21 @@ table(fillData$week)
 ## weekday weekend 
 ##   12960    4608
 ```
+
+2. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis):
+
+
+```r
+dataByIntWeek <- aggregate(fillData$steps, 
+                      by = list(interval = as.numeric(as.character(fillData$interval)),
+                                weekdays = fillData$week), 
+                      FUN = "mean")
+names(dataByIntWeek)[3] <- "meanSteps"
+
+library(lattice)
+xyplot(dataByIntWeek$meanStep ~ dataByIntWeek$interval | dataByIntWeek$weekdays, 
+       layout = c(1, 2), type = "l", 
+       xlab = "Interval", ylab = "Number of steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-18-1.png) 
